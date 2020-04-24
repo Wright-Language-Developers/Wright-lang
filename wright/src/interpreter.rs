@@ -123,6 +123,6 @@ impl Wright {
 
     /// Calls and consumes this wright interpreter. Returns exitcode.
     pub fn call(self) -> ExitCode {
-        
+        todo!()
     }
 }
