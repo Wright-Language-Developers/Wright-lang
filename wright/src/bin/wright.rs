@@ -3,7 +3,7 @@ use clap::{App, AppSettings, Arg, Values};
 
 use std::process::exit;
 
-use wright::{Emit, Wright};
+use wright::interpreter::{Emit, Wright, Target, DEFAULT_TARGET};
 
 /// Create and return the Wright command line app via [clap.rs](https://clap.rs).
 pub fn get_wright_app<'a, 'b>() -> App<'a, 'b> {
@@ -16,21 +16,21 @@ pub fn get_wright_app<'a, 'b>() -> App<'a, 'b> {
             Arg::with_name("INPUT")
                 .help("Input wright file(s).")
                 .multiple(true)
-                .required_unless("INTERACTIVE"),
+                .required_unless("INTERACTIVE")
         )
         .arg(
             Arg::with_name("RUN")
-                .help("Runs input wright file rather than compiling it.")
-                .case_insensitive(true)
+                .help("Runs wright file(s) immediately.")
                 .short("r")
-                .long("run"),
+                .long("run")
+                .conflicts_with("INTERACTIVE")
         )
         .arg(
             Arg::with_name("INTERACTIVE")
                 .help("Start an interactive wright session.")
-                .case_insensitive(true)
                 .short("i")
-                .long("interactive"),
+                .long("interactive")
+                .conflicts_with_all(&["RUN", "EMIT", "TARGET"])
         )
         .arg(
             Arg::with_name("EMIT")
@@ -38,37 +38,53 @@ pub fn get_wright_app<'a, 'b>() -> App<'a, 'b> {
                 .long("emit")
                 .help("Prints intermediate representation(s).")
                 .takes_value(true)
-                .possible_values(&["tokens", "lexemes", "ast"])
+                .possible_values(&["ast"])
                 .use_delimiter(true)
-                .multiple(true),
+                .multiple(true)
+        )
+        .arg(
+            Arg::with_name("TARGET")
+                .help("Set the compilation target")
+                .long("target")
+                .takes_value(true)
+                .possible_values(&["treewalk"])
         )
         .arg(
             Arg::with_name("VERBOSE")
                 .short("v")
                 .long("verbose")
-                .help("Prints additional information."),
+                .help("Prints additional information.")
         )
 }
 
 fn main() {
     let matches = get_wright_app().get_matches();
+
     let filenames = matches
         .values_of("INPUT")
         .unwrap_or(Values::default())
         .collect();
-    let mut emits: Vec<Emit> = Vec::with_capacity(2);
-    for v in matches.values_of("EMIT").unwrap_or(Values::default()) {
-        emits.push(match v {
-            "tokens" => Emit::Tokens,
-            "lexemes" => Emit::Lexemes,
+
+    let emits: Vec<Emit> = matches
+        .values_of("EMIT")
+        .map(|vals: Values| vals.map(|s: &str| match s {
             "ast" => Emit::AbstractSyntaxTree,
             other => panic!("{} should not be a possible emit option.", other),
-        });
-    }
+        }).collect())
+        .unwrap_or(Vec::new());
+
+    let target = matches.value_of("TARGET")
+        .map(|s| match s {
+            "treewalk" => Target::Treewalker,
+            other => panic!("{} should not be a possible target option.", other),
+        })
+        .unwrap_or(DEFAULT_TARGET);
+
     let mut wright = Wright::new();
     wright
-        .set_verbose(matches.is_present("VERBOSE"))
-        .set_interactive(matches.is_present("INTERACTIVE"))
+        .verbose(matches.is_present("VERBOSE"))
+        .interactive(matches.is_present("INTERACTIVE"))
+        .set_target(target)
         .set_emits(emits);
     if wright.add_files(filenames).is_err() {
         exit(exitcode::NOINPUT);
