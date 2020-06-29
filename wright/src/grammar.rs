@@ -16,3 +16,6 @@ pub mod tracing;
 
 /// Utility functions for testing wright's parsing systems.
 pub mod testing;
+
+/// Parser prelude. Re-exports all underlying utility parsers.
+pub mod prelude;

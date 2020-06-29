@@ -13,6 +13,7 @@ pub trait Alt<I, O, E> {
     fn choice(&self, input: I) -> IResult<I, O, E>;
 }
 
+// Implement `alt` for tuples.
 macro_rules! impl_alt {
     ($first:ident $second:ident $($rest:ident)*) => {
         impl_alt!(inner1 $first $second; $($rest)*);
