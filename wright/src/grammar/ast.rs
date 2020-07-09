@@ -17,6 +17,6 @@ pub mod pattern;
 
 /// Check if two AST nodes are equal by serializing them both to JSON and checking the equality
 /// of the JSON strings.
-pub fn ast_eq<A: Serialize, B: Serialize>(a: &A, b: &B) -> bool {
+pub fn ast_eq<T: Serialize>(a: &T, b: &T) -> bool {
     serde_json::to_string(a).eq(&serde_json::to_string(b))
 }

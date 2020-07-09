@@ -1,25 +1,18 @@
 use nom::{
     branch::alt,
     bytes::complete::{is_a, tag, take_while1, take_while_m_n},
-    combinator::{map_res, peek},
+    combinator::{map_res, map, peek},
     sequence::preceded,
     IResult,
 };
 
-use crate::grammar::ast::NumLit;
+use crate::grammar::ast::literal::NumLit;
 
-use crate::grammar::ast::{eq::AstEq, Expression};
+use crate::grammar::ast::expression::Expression;
 use crate::grammar::model::{HasSourceReference, WrightInput};
 use crate::grammar::parsers::with_input;
-use crate::grammar::tracing::parsers::map;
-use crate::grammar::tracing::trace_result;
 use std::fmt::Debug;
 use std::num::ParseIntError;
-
-impl<T: Debug + Clone> NumLit<T> {
-    /// Name used to refer to this parser in traces.
-    pub const TRACE_NAME: &'static str = "NumLit";
-}
 
 impl<I: WrightInput> NumLit<I> {
     fn new(source: I, num: u128) -> Self {
@@ -119,11 +112,5 @@ impl<I: Debug + Clone> HasSourceReference<I> for NumLit<I> {
 impl<I: Debug + Clone> Into<Expression<I>> for NumLit<I> {
     fn into(self) -> Expression<I> {
         Expression::NumLit(self)
-    }
-}
-
-impl<I: Debug + Clone> AstEq for NumLit<I> {
-    fn ast_eq(fst: &Self, snd: &Self) -> bool {
-        fst.inner == snd.inner
     }
 }
