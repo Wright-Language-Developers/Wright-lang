@@ -4,6 +4,9 @@
 //! The Wright programming language crate.
 //!
 
+#[macro_use]
+extern crate serde;
+
 use codespan::{FileId, Files};
 
 use exitcode::ExitCode;
@@ -14,9 +17,6 @@ use std::io::Read;
 
 /// Wright grammar module.
 pub mod grammar;
-
-/// Wright virtual machine module.
-pub mod vm;
 
 /// Enum of possible intermediate representations which can be emitted.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]

@@ -10,6 +10,7 @@ use nom::{
 use std::fmt::Debug;
 use std::ops::{Range, RangeFrom, RangeFull, RangeTo};
 use std::str::FromStr;
+use serde::Serialize;
 
 /// A piece of source code. Generally used to replace strings in the nom parser,
 /// this structure stores extra information about the location of a fragment of
@@ -415,10 +416,9 @@ impl<'s> Into<String> for Fragment<'s> {
 }
 
 /// Trait alias for all wright parser inputs.
-/// All inputs are required to implement Debug,
-/// Clone, and a number of nom traits.
+/// All inputs are required to implement Serialize, Debug, Clone, and a number of nom traits.
 pub trait WrightInput:
-    OptionallyTraceable
+    Serialize
     + Debug
     + Clone
     + InputTake

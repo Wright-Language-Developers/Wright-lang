@@ -1,18 +1,18 @@
-use std::fmt::Debug;
+use crate::grammar::model::WrightInput;
 
 /// An identifier in Wright source code.
 /// There is only one field here, the source code of the identifier.
 /// This is because the identifier itself will be the same as the
 /// source.
-#[derive(Clone, Debug)]
-pub struct Identifier<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct Identifier<SourceCodeReference: WrightInput> {
     /// Reference to associated source code.
     pub source: SourceCodeReference,
 }
 
 /// A scoped, or qualified, name.
-#[derive(Clone, Debug)]
-pub struct ScopedName<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct ScopedName<SourceCodeReference: WrightInput> {
     /// The source code fragment.
     pub source: SourceCodeReference,
     /// The sequence of simple identifiers.

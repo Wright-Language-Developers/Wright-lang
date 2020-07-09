@@ -1,4 +1,3 @@
-use crate::grammar::tracing::input::OptionallyTraceable;
 use nom::{IResult, Offset, Slice};
 use std::ops::RangeTo;
 
@@ -32,7 +31,7 @@ mod whitespace_tests;
 /// `(I, (I, O))`, or `(remaining input, (input consumed, output))`
 pub fn with_input<F, I, O>(parser: F) -> impl Fn(I) -> IResult<I, (I, O)>
 where
-    I: Clone + Offset + Slice<RangeTo<usize>> + OptionallyTraceable,
+    I: Clone + Offset + Slice<RangeTo<usize>>,
     F: Fn(I) -> IResult<I, O>,
 {
     move |i: I| -> IResult<I, (I, O)> {
@@ -54,7 +53,7 @@ where
 /// Call [`with_input`](fn.with_input.html) on a given input fragmen
 pub fn with_input_call<F, I, O>(parser: F, input: I) -> IResult<I, (I, O)>
 where
-    I: Clone + Offset + Slice<RangeTo<usize>> + OptionallyTraceable,
+    I: Clone + Offset + Slice<RangeTo<usize>>,
     F: Fn(I) -> IResult<I, O>,
 {
     with_input(parser)(input)
@@ -64,6 +63,7 @@ where
 mod with_input_test {
     use crate::grammar::parsers::with_input;
     use crate::grammar::tracing::parsers::tag;
+    use nom::bytes::complete::tag;
 
     #[test]
     fn test_with_input() {
