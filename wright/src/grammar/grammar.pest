@@ -13,6 +13,19 @@ SL_COMMENT = @{ !(DOC_COM_STARTER) ~ "//" ~ (!(NEWLINE | EOI) ~ ANY) ~ NEWLINE?}
 ML_COMMENT = @{ "/*" ~ (!("*/") ~ ANY) ~ "*/"}
 COMMENT = _{ SL_COMMENT | ML_COMMENT }
 
+// Primitive type tokens
+PRIM_TY_INT_U8 = @{ "u8" }
+PRIM_TY_INT_I8 = @{ "i8" }
+PRIM_TY_INT_U16 = @{ "u16" }
+PRIM_TY_INT_I16 = @{ "i16" }
+PRIM_TY_INT_U32 = @{ "u32" }
+PRIM_TY_INT_I32 = @{ "i32" }
+PRIM_TY_INT_U64 = @{ "u64" }
+PRIM_TY_INT_I64 = @{ "i64" }
+PRIM_TY_INT_U128 = @{ "u128" }
+PRIM_TY_INT_I128 = @{ "i128" }
+
+
 // Literals
 
 // Integer Literals
@@ -20,6 +33,19 @@ INT_LIT_DEC = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* }
 INT_LIT_HEX = @{ "0x" ~ ASCII_HEX_DIGIT ~ (ASCII_HEX_DIGIT | "_")*}
 INT_LIT_OCT = @{ "0o" ~ ASCII_OCT_DIGIT ~ (ASCII_OCT_DIGIT | "_")*}
 INT_LIT_BIN = @{ "0b" ~ ASCII_BIN_DIGIT ~ (ASCII_BIN_DIGIT | "_")*}
-INT_LIT_HEAD = ${ INT_LIT_BIN | INT_LIT_HEX | INT_LIT_OCT | INT_LIT_DEC} // Decimal must be last since it doesn't start with 0
+INT_LIT_SUFFIX = ${
+    PRIM_TY_INT_I8 |
+    PRIM_TY_INT_I16 |
+    PRIM_TY_INT_I32 |
+    PRIM_TY_INT_I64 |
+    PRIM_TY_INT_I128 |
+    PRIM_TY_INT_U8 |
+    PRIM_TY_INT_U16 |
+    PRIM_TY_INT_U32 |
+    PRIM_TY_INT_U64 |
+    PRIM_TY_INT_U128
+}
+INT_LIT_BODY = ${ INT_LIT_BIN | INT_LIT_HEX | INT_LIT_OCT | INT_LIT_DEC} // Decimal must be last since it doesn't start with 0
+INT_LIT = ${INT_LIT_BODY ~ INT_LIT_SUFFIX?}
 
-PROGRAM = {SOI ~ EOI}
+program = {SOI ~ INT_LIT ~ EOI}

@@ -1,8 +1,6 @@
 
-use codespan::{ByteIndex, ByteOffset, FileId, Files, Span};
+use codespan::{ByteIndex, FileId, Files, Span};
 use std::fmt::Debug;
-use std::ops::{Range, RangeFrom, RangeFull, RangeTo};
-use std::str::FromStr;
 
 /// A piece of source code. Generally used to replace strings in the nom parser,
 /// this structure stores extra information about the location of a fragment of
@@ -16,15 +14,6 @@ pub struct Fragment<'source> {
     span: Span,
     /// The fragment of source code represented by this object.
     source: &'source str,
-}
-
-/// An error when attempting to merge two fragments.
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub enum FragmentError {
-    /// Fragments are from different files, and cannot be merged.
-    HandleMismatch,
-    /// Fragments are not in the same `Files<String>` object, and cannot be merged.
-    FilesRefMismatch,
 }
 
 impl<'s> Fragment<'s> {

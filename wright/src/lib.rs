@@ -10,6 +10,9 @@ extern crate pest_derive;
 #[macro_use]
 extern crate serde;
 
+#[macro_use]
+extern crate lazy_static;
+
 use codespan::{FileId, Files};
 
 use exitcode::ExitCode;
