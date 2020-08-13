@@ -1,6 +1,7 @@
 
 use codespan::{ByteIndex, FileId, Files, Span};
 use std::fmt::Debug;
+use serde::{Serialize, Serializer};
 
 /// A piece of source code. Generally used to replace strings in the nom parser,
 /// this structure stores extra information about the location of a fragment of
@@ -10,7 +11,9 @@ pub struct Fragment<'source> {
     /// A reference to the parent Files object, which stores all source code
     /// being processed.
     files: &'source Files<String>,
+    /// The handle of the associated file.
     handle: FileId,
+    /// The span in the associated file.
     span: Span,
     /// The fragment of source code represented by this object.
     source: &'source str,
@@ -76,5 +79,13 @@ impl<'s> Fragment<'s> {
     #[inline]
     pub fn get_handle(&self) -> FileId {
         self.handle
+    }
+}
+
+impl<'s> Serialize for Fragment<'s> {
+    /// fragments serialize as their underlying source code. (All meta-data is discarded).
+    fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> where
+        S: Serializer {
+        serializer.serialize_str(self.source)
     }
 }

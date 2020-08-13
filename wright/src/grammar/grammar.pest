@@ -48,4 +48,6 @@ INT_LIT_SUFFIX = ${
 INT_LIT_BODY = ${ INT_LIT_BIN | INT_LIT_HEX | INT_LIT_OCT | INT_LIT_DEC} // Decimal must be last since it doesn't start with 0
 INT_LIT = ${INT_LIT_BODY ~ INT_LIT_SUFFIX?}
 
+identifier = @{}
+
 program = {SOI ~ INT_LIT ~ EOI}

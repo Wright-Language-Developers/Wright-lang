@@ -1,9 +1,10 @@
 use crate::grammar::ast::{BooleanLit, CharLit, NumLit, ScopedName, SelfLit, Statement, StringLit};
 use std::fmt::Debug;
+use serde::Serialize;
 
 /// An expression in parentheses in wright source code.
-#[derive(Clone, Debug)]
-pub struct Parens<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct Parens<SourceCodeReference: Clone + Debug + Serialize> {
     /// Associated source code.
     pub source: SourceCodeReference,
     /// The expression between these parentheses.
@@ -12,7 +13,7 @@ pub struct Parens<SourceCodeReference: Clone + Debug> {
 
 /// The type of binary operation being done.
 #[allow(missing_docs)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Serialize)]
 pub enum BinaryOp {
     Range,
     RangeInclusive,
@@ -38,8 +39,8 @@ pub enum BinaryOp {
 }
 
 /// A binary expression in source code.
-#[derive(Clone, Debug)]
-pub struct BinaryExpression<SourceCodeReference: Debug + Clone> {
+#[derive(Clone, Debug, Serialize)]
+pub struct BinaryExpression<SourceCodeReference: Debug + Clone + Serialize> {
     /// Associated source code.
     pub source: SourceCodeReference,
     /// Operation being done.
@@ -51,7 +52,7 @@ pub struct BinaryExpression<SourceCodeReference: Debug + Clone> {
 }
 
 /// Type of range expression.
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq, Serialize)]
 pub enum RangeOperator {
     /// A RangeTo Expression of the form `..n`.
     RangeTo,
@@ -69,8 +70,8 @@ pub enum RangeOperator {
 ///
 /// Full range expressions are handled by the
 /// [binary expression parser](struct.BinaryExpression.html).
-#[derive(Debug, Clone)]
-pub struct RangeExpression<SourceCodeReference: Clone + Debug> {
+#[derive(Debug, Clone, Serialize)]
+pub struct RangeExpression<SourceCodeReference: Clone + Debug + Serialize> {
     /// Associated source code.
     pub frag: SourceCodeReference,
     /// The range operator in use.
@@ -81,7 +82,7 @@ pub struct RangeExpression<SourceCodeReference: Clone + Debug> {
 
 /// Unary expression operators.
 #[allow(missing_docs)]
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize)]
 pub enum UnaryOp {
     LogicalNot,
     BitwiseNot,
@@ -89,8 +90,8 @@ pub enum UnaryOp {
 }
 
 /// A unary expression in source code.
-#[derive(Clone, Debug)]
-pub struct UnaryExpression<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct UnaryExpression<SourceCodeReference: Clone + Debug + Serialize> {
     /// Associated source code.
     pub frag: SourceCodeReference,
     /// The operation being done.
@@ -100,8 +101,8 @@ pub struct UnaryExpression<SourceCodeReference: Clone + Debug> {
 }
 
 /// A block in source code.
-#[derive(Clone, Debug)]
-pub struct Block<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct Block<SourceCodeReference: Clone + Debug + Serialize> {
     /// The associated source code.
     pub source: SourceCodeReference,
     /// The statements in this block.
@@ -111,8 +112,8 @@ pub struct Block<SourceCodeReference: Clone + Debug> {
 }
 
 /// A conditional expression in wright source code.
-#[derive(Clone, Debug)]
-pub struct Conditional<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct Conditional<SourceCodeReference: Clone + Debug + Serialize> {
     /// The associated source code.
     pub source: SourceCodeReference,
     /// The primary condition.
@@ -128,8 +129,8 @@ pub struct Conditional<SourceCodeReference: Clone + Debug> {
 }
 
 /// Indexing expressions such as `array[1]` in wright source code.
-#[derive(Clone, Debug)]
-pub struct IndexExpression<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct IndexExpression<SourceCodeReference: Clone + Debug + Serialize> {
     /// The associated source code.
     pub source: SourceCodeReference,
     /// The thing being indexed into. Usually a list, string, or map.
@@ -139,8 +140,8 @@ pub struct IndexExpression<SourceCodeReference: Clone + Debug> {
 }
 
 /// Function call expressions such as `foo(bar, baz)` in wright source code.
-#[derive(Clone, Debug)]
-pub struct FuncCall<SourceCodeReference: Clone + Debug> {
+#[derive(Clone, Debug, Serialize)]
+pub struct FuncCall<SourceCodeReference: Clone + Debug + Serialize> {
     /// The associated source code.
     pub source: SourceCodeReference,
     /// The function being called
@@ -150,9 +151,9 @@ pub struct FuncCall<SourceCodeReference: Clone + Debug> {
 }
 
 /// An expression in wright source code.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 #[allow(missing_docs)]
-pub enum Expression<SourceCodeReference: Clone + Debug> {
+pub enum Expression<SourceCodeReference: Clone + Debug + Serialize> {
     NumLit(NumLit<SourceCodeReference>),
     CharLit(CharLit<SourceCodeReference>),
     StringLit(StringLit<SourceCodeReference>),

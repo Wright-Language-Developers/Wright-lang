@@ -5,13 +5,13 @@
 //!
 
 #[macro_use]
-extern crate pest_derive;
+use pest_derive;
 
 #[macro_use]
-extern crate serde;
+use serde;
 
 #[macro_use]
-extern crate lazy_static;
+use lazy_static;
 
 use codespan::{FileId, Files};
 
