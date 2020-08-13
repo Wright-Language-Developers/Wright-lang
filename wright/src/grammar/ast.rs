@@ -1,12 +1,3 @@
-/// Module to test equality between two AST Nodes.
-pub mod eq;
-
-/// Re-export `AstEq` publicly.
-pub use eq::AstEq;
-
-#[cfg(test)]
-mod eq_tests;
-
 /// Expression nodes in the AST.
 pub mod expression;
 
@@ -36,3 +27,12 @@ pub mod pattern;
 
 /// Reexport pattern nodes publicly.
 pub use pattern::*;
+use serde::Serialize;
+
+/// Check whether two AST node are structurally equal by
+/// serializing each to JSON and then comparing the JSON.
+pub fn ast_eq<A: Serialize, B: Serialize>(a: &A, b: &B) -> bool {
+    serde_json::to_string(a)
+        .and_then(|fst| serde_json::to_string(b).map(|snd| snd == fst))
+        .unwrap_or(false)
+}

@@ -4,6 +4,12 @@
 //! The Wright programming language crate.
 //!
 
+#[macro_use]
+extern crate pest_derive;
+
+#[macro_use]
+extern crate serde;
+
 use codespan::{FileId, Files};
 
 use exitcode::ExitCode;
