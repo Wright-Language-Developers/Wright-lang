@@ -24,16 +24,7 @@ PRIM_TY_INT_U64 = @{ "u64" }
 PRIM_TY_INT_I64 = @{ "i64" }
 PRIM_TY_INT_U128 = @{ "u128" }
 PRIM_TY_INT_I128 = @{ "i128" }
-
-
-// Literals
-
-// Integer Literals
-INT_LIT_DEC = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* }
-INT_LIT_HEX = @{ "0x" ~ ASCII_HEX_DIGIT ~ (ASCII_HEX_DIGIT | "_")*}
-INT_LIT_OCT = @{ "0o" ~ ASCII_OCT_DIGIT ~ (ASCII_OCT_DIGIT | "_")*}
-INT_LIT_BIN = @{ "0b" ~ ASCII_BIN_DIGIT ~ (ASCII_BIN_DIGIT | "_")*}
-INT_LIT_SUFFIX = ${
+PRIM_TY_INT = ${
     PRIM_TY_INT_I8 |
     PRIM_TY_INT_I16 |
     PRIM_TY_INT_I32 |
@@ -45,9 +36,34 @@ INT_LIT_SUFFIX = ${
     PRIM_TY_INT_U64 |
     PRIM_TY_INT_U128
 }
-INT_LIT_BODY = ${ INT_LIT_BIN | INT_LIT_HEX | INT_LIT_OCT | INT_LIT_DEC} // Decimal must be last since it doesn't start with 0
-INT_LIT = ${INT_LIT_BODY ~ INT_LIT_SUFFIX?}
 
-identifier = @{}
+PRIM_TY_BOOL = @{"bool"}
+
+PRIM_TY = ${
+    PRIM_TY_INT |
+    PRIM_TY_BOOL
+}
+
+RESERVED_WORD = _{
+    CLASS |
+    PRIM_TY
+}
+
+// keywords
+
+CLASS = @{"class"}
+
+// Literals
+
+// Integer Literals
+INT_LIT_DEC = @{ ASCII_DIGIT ~ (ASCII_DIGIT | "_")* }
+INT_LIT_HEX = @{ "0x" ~ ASCII_HEX_DIGIT ~ (ASCII_HEX_DIGIT | "_")*}
+INT_LIT_OCT = @{ "0o" ~ ASCII_OCT_DIGIT ~ (ASCII_OCT_DIGIT | "_")*}
+INT_LIT_BIN = @{ "0b" ~ ASCII_BIN_DIGIT ~ (ASCII_BIN_DIGIT | "_")*}
+INT_LIT_BODY = ${ INT_LIT_BIN | INT_LIT_HEX | INT_LIT_OCT | INT_LIT_DEC} // Decimal must be last since it doesn't start with 0
+INT_LIT = ${INT_LIT_BODY ~ PRIM_TY_INT?}
+
+
+identifier = @{!RESERVED_WORD ~ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_")*}
 
 program = {SOI ~ INT_LIT ~ EOI}
